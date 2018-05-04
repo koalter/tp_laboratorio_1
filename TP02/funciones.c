@@ -27,6 +27,7 @@ int ePers_init(ePersona listado[],int limite)
         retorno = 0;
         for(i=0; i<limite; i++)
         {
+            strcpy(listado[i].nombre,"zzz");
             listado[i].estado= LIBRE;
             listado[i].dni= 0;
         }
@@ -96,7 +97,6 @@ int ePers_buscarPorId(ePersona listado[] ,int limite, int id)
 
 void ePers_mostrarUno(ePersona parametro)
 {
-    printf("\n    NOMBRE  EDAD        DNI\n");
     printf("%10s %5d %10d\n",parametro.nombre,parametro.edad,parametro.dni);
 
 }
@@ -108,6 +108,7 @@ int ePers_mostrarListado(ePersona listado[],int limite)
     if(limite > 0 && listado != NULL)
     {
         retorno = 0;
+        printf("\n    NOMBRE  EDAD        DNI\n");
         for(i=0; i<limite; i++)
         {
             if(listado[i].estado==OCUPADO)
@@ -169,7 +170,7 @@ void ePers_baja(ePersona persona[] ,int limite)
     if(respuesta=='s')
     {
         persona[i-1].id = 0;
-        strcpy(persona[i-1].nombre,"\0");
+        strcpy(persona[i-1].nombre,"zzz");
         persona[i-1].edad = 0;
         persona[i-1].dni = 0;
         persona[i-1].estado = LIBRE;
@@ -190,4 +191,35 @@ int pedirEntero(char mensaje[])
     printf(mensaje);
     scanf("%d", &numero);
     return numero;
+}
+
+void bubbleSort(ePersona persona[], int longitud)
+{
+    int i;
+    int j;
+    char auxiliarStr[20];
+    int auxInt;
+    for(i=0;i<longitud-1;i++)
+    {
+        for(j=i+1;j<longitud;j++)
+        {
+            if(strcmp(persona[i].nombre, persona[j].nombre) > 0)
+            {
+                strcpy(auxiliarStr, persona[i].nombre);
+                strcpy(persona[i].nombre, persona[j].nombre);
+                strcpy(persona[j].nombre, auxiliarStr);
+
+                auxInt = persona[i].edad;
+                persona[i].edad = persona[j].edad;
+                persona[j].edad = auxInt;
+
+                auxInt = persona[i].dni;
+                persona[i].dni = persona[j].dni;
+                persona[j].dni = auxInt;
+            } //if(strcmp(persona[i].nombre, persona[j].nombre) > 0)
+        } //for(j=i+1;j<longitud;j++)
+
+    } //for(i=0;i<longitud-1;i++)
+
+    ePers_mostrarListado(persona,longitud);
 }

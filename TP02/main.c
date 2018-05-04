@@ -30,7 +30,7 @@ int main()
                 ePers_baja(persona,TAMANIO);
                 break;
             case 3:
-                ePers_mostrarListado(persona,TAMANIO);
+                bubbleSort(persona,TAMANIO);
                 break;
             case 4:
                 /**

@@ -30,3 +30,5 @@ int ePers_modificacion(ePersona[] ,int limite, int id);
 int ePers_ordenar(ePersona[] ,int limite, int orden);
 char* pedirNombre(char mensaje[], char cadena[]);
 int pedirEntero(char mensaje[]);
+
+void bubbleSort(ePersona[], int longitud);
