@@ -12,7 +12,7 @@ typedef struct
 
 #endif // FUNCIONES_H_INCLUDED
 
-int ePers_cargarEjemploDeListado(ePersona persona[], int limite);
+void ePers_estructuraEjemplo(ePersona[],int limite);
 
 int ePers_init(ePersona[],int limite);
 int ePers_buscarPorId(ePersona[] ,int limite, int id);
@@ -27,8 +27,10 @@ int ePers_alta(ePersona[] ,int limite);
 void ePers_baja(ePersona persona[] ,int limite);
 int ePers_modificacion(ePersona[] ,int limite, int id);
 
-int ePers_ordenar(ePersona[] ,int limite, int orden);
+void ePers_ordenar(ePersona[] ,int longitud);
 char* pedirNombre(char mensaje[], char cadena[]);
 int pedirEntero(char mensaje[]);
 
 void bubbleSort(ePersona[], int longitud);
+int ePers_grafico(ePersona listado[],int longitud);
+int ePers_acumulador(ePersona listado[], int limite, int* valor);

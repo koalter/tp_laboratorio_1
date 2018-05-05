@@ -5,17 +5,52 @@
 #define LIBRE 1
 #define OCUPADO 0
 
-int ePers_cargarEjemploDeListado(ePersona persona[], int limite)
+void ePers_estructuraEjemplo(ePersona persona[],int limite)
 {
-    for(int i=0;i<limite;i++)
+    int i;
+    /*ePersona persona[] = {
+        {1,"Lorenzo",23,38304953,0},
+        {2,"Eliana",21,40011160,0},
+        {3,"Miguel",17,45040283,0},
+        {4,"Carmen",41,27391484,0},
+        {5,"Raul",50,22147821,0}
+        };*/
+    void load(char nombre[],int edad,int dni)
     {
+        strcpy(persona[i].nombre,nombre);
+        persona[i].edad = edad;
+        persona[i].dni = dni;
+    }
+
+    for(i=0;i<limite;i++)
+    {
+
+        switch(i)
+        {
+            case 0:
+                load("Lorenzo",23,38304953);
+                break;
+            case 1:
+                load("Eliana",21,40011160);
+                break;
+            case 2:
+                load("Miguel",17,45040283);
+                break;
+            case 3:
+                load("Carmen",41,27391484);
+                break;
+            case 4:
+                load("Raul",50,22147821);
+                /*strcpy(persona[i].nombre,"Lorenzo");
+                persona[i].edad = 23;
+                persona[i].dni = 38304953;*/
+                break;
+        }
+
         persona[i].id = i+1;
-        strcpy(persona[i].nombre,"lorenzo");
-        persona[i].edad = 25;
-        persona[i].dni = 35921221+i;
         persona[i].estado = OCUPADO;
     }
-    return printf("DATOS CARGADOS\n");
+    printf("DATOS CARGADOS\n");
 }
 
 int ePers_init(ePersona listado[],int limite)
@@ -108,13 +143,32 @@ int ePers_mostrarListado(ePersona listado[],int limite)
     if(limite > 0 && listado != NULL)
     {
         retorno = 0;
-        printf("\n    NOMBRE  EDAD        DNI\n");
+        printf("\n    NOMBRE  EDAD\tDNI\n");
         for(i=0; i<limite; i++)
         {
             if(listado[i].estado==OCUPADO)
             {
                 ePers_mostrarUno(listado[i]);
             }
+        }
+    }
+    return retorno;
+}
+
+int ePers_mostrarListadoConBorrados(ePersona listado[],int limite)
+{
+    int retorno = -1;
+    int i;
+    if(limite > 0 && listado != NULL)
+    {
+        retorno = 0;
+        for(i=0; i<limite; i++)
+        {
+            if(listado[i].estado==LIBRE)
+            {
+                printf("\n[LIBRE]");
+            }
+            ePers_mostrarUno(listado[i]);
         }
     }
     return retorno;
@@ -193,7 +247,7 @@ int pedirEntero(char mensaje[])
     return numero;
 }
 
-void bubbleSort(ePersona persona[], int longitud)
+void ePers_ordenar(ePersona persona[] ,int longitud)
 {
     int i;
     int j;
@@ -222,4 +276,60 @@ void bubbleSort(ePersona persona[], int longitud)
     } //for(i=0;i<longitud-1;i++)
 
     ePers_mostrarListado(persona,longitud);
+}
+
+int ePers_grafico(ePersona listado[],int longitud)
+{
+    int tagValor[3];
+    char tagNombre[3][10] = {"<19","19-35",">35"};
+    int retorno = -1;
+    int i;
+    int j;
+
+    ePers_acumulador(listado,longitud,tagValor);
+
+    if(longitud > 0 && listado != NULL)
+    {
+        retorno = 0;
+        for(i=0; i<3; i++)
+        {
+            if(listado[i].estado==OCUPADO)
+            {
+                for(j=0; j<tagValor[i]; j++)
+                {
+                    printf("%d",tagValor[i]);
+                    system("pause");
+                    printf("%s\t",tagNombre[i]);
+                    putchar('*');
+                    putchar('\n');
+                } //for(j=0; j<longitud; j++)
+            } //if(listado[i].estado==OCUPADO)
+        } //for(i=0; i<longitud; i++)
+    } //if(longitud > 0 && listado != NULL)
+
+    return retorno;
+}
+
+int ePers_acumulador(ePersona listado[], int limite, int* valor)
+{
+    valor=0;
+    for(int i=0; i<limite; i++)
+    {
+        if(listado[i].estado==OCUPADO)
+        {
+            if (listado[i].edad > 35)
+                valor[2]++;
+            else if (listado[i].edad < 18)
+                valor[0]++;
+            else
+                valor[1]++;
+             //if (listado[i].edad > 35)
+        } //if(listado[i].estado==OCUPADO)
+    }
+
+    printf("Los menores de 19 son: %d\n", valor[0]);
+    printf("Los que tienen entre 19 y 35 son: %d\n", valor[1]);
+    printf("Los mayores de 35 son: %d\n", valor[2]);
+
+    return 0;
 }

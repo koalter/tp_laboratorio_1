@@ -24,18 +24,20 @@ int main()
         switch(opcion)
         {
             case 1:
-                ePers_alta(persona,TAMANIO);
+                ePers_estructuraEjemplo(persona,5);
+                //ePers_alta(persona,TAMANIO);
                 break;
             case 2:
                 ePers_baja(persona,TAMANIO);
                 break;
             case 3:
-                bubbleSort(persona,TAMANIO);
+                //ePers_mostrarListadoConBorrados(persona,TAMANIO);
+                ePers_ordenar(persona,TAMANIO);
                 break;
             case 4:
-                /**
-                *   Espacio reservado para programar opcion
-                */
+                ePers_grafico(persona,TAMANIO);
+                //ePers_grafico(persona,TAMANIO,"<19","19-35",">35");
+                break;
             default:
                 opcion = 9;
                 break;
