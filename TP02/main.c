@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "funciones.h"
+#include "lib.h"
 #define TAMANIO 20
 
 int main()
@@ -24,18 +24,17 @@ int main()
         switch(opcion)
         {
             case 1:
-                ePers_estructuraEjemplo(persona,7);
-                //ePers_alta(persona,TAMANIO);
+                //ePers_estructuraEjemplo(persona);
+                ePers_alta(persona,TAMANIO);
                 break;
             case 2:
                 ePers_baja(persona,TAMANIO);
                 break;
             case 3:
-                //ePers_mostrarListadoConBorrados(persona,TAMANIO);
+                //ePers_mostrarListado(persona,TAMANIO);
                 ePers_ordenar(persona,TAMANIO);
                 break;
             case 4:
-                //ePers_acumulador(persona,TAMANIO);
                 ePers_graficoVertical(persona,TAMANIO);
                 break;
             default:

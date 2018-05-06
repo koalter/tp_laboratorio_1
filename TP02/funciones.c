@@ -197,16 +197,13 @@ int ePers_alta(ePersona listado[],int limite)
             retorno = -3;
             id = ePers_siguienteId(listado,limite);
 
-            //if(!getValidString("Nombre?","Error","Overflow", nombre,50,2))
-            //{
-                retorno = 0;
-                listado[indice].id = id;
-                strcpy(listado[indice].nombre,pedirNombre("Ingrese nombre: ", nombre) );
+            retorno = 0;
+            listado[indice].id = id;
+            strcpy(listado[indice].nombre,pedirNombre("Ingrese nombre: ", nombre) );
 
-                listado[indice].edad = pedirEntero("Ingrese la edad: ");
-                listado[indice].dni = pedirEntero("Ingrese numero de DNI: ");
-                listado[indice].estado = OCUPADO;
-            //}
+            listado[indice].edad = pedirEntero("Ingrese la edad: ");
+            listado[indice].dni = pedirEntero("Ingrese numero de DNI: ");
+            listado[indice].estado = OCUPADO;
         }
     }
     return retorno;
