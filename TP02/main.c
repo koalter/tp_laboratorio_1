@@ -24,7 +24,7 @@ int main()
         switch(opcion)
         {
             case 1:
-                ePers_estructuraEjemplo(persona,5);
+                ePers_estructuraEjemplo(persona,7);
                 //ePers_alta(persona,TAMANIO);
                 break;
             case 2:
@@ -35,8 +35,8 @@ int main()
                 ePers_ordenar(persona,TAMANIO);
                 break;
             case 4:
-                ePers_acumulador(persona,TAMANIO);
-                //ePers_graficoHorizontal(persona,TAMANIO);
+                //ePers_acumulador(persona,TAMANIO);
+                ePers_graficoVertical(persona,TAMANIO);
                 break;
             default:
                 opcion = 9;

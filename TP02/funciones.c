@@ -4,6 +4,7 @@
 #include "funciones.h"
 #define LIBRE 1
 #define OCUPADO 0
+#define TAGS 3
 
 void ePers_estructuraEjemplo(ePersona persona[],int limite)
 {
@@ -44,6 +45,12 @@ void ePers_estructuraEjemplo(ePersona persona[],int limite)
                 /*strcpy(persona[i].nombre,"Lorenzo");
                 persona[i].edad = 23;
                 persona[i].dni = 38304953;*/
+                break;
+            case 5:
+                load("Enrique",28,44738292);
+                break;
+            case 6:
+                load("Silvia",25,23901921);
                 break;
         }
 
@@ -323,32 +330,69 @@ int ePers_acumulador(ePersona listado[], int longitud)
     printf("Los que tienen entre 19 y 35 son: %d\n", valor[1]);
     printf("Los mayores de 35 son: %d\n", valor[2]);
     printf("El maximo valor es %d y corresponde al indice %d\n",valorMaximo,indice);
-    return valor;
+    return 0;
 }
-/*
+
 int ePers_graficoVertical(ePersona listado[],int longitud)
 {
-    int valor[3] = ePers_acumulador(listado,longitud);
-    int valorMax =
-    char tagNombre[3][10] = {"<19","19-35",">35"};
+    char tagNombre[TAGS][10] = {"<19","19-35",">35"};
+    int valor[TAGS] = {0};
+    int valorMaximo;
     int i;
     int j;
 
-    for(i=0; i<valor[j]; i++)
+    for(int i=0; i<longitud; i++)
     {
-        printf("%s \t", tagNombre[j]);
-        for(j=0;j<3;j++)
+        if(listado[i].estado==OCUPADO)
         {
+            /// acumulador
+            if (listado[i].edad > 35)
+            {
+                valor[2]++;
+                valorMaximo=valor[2];
+            }
+            else
+            {
+                if (listado[i].edad < 19)
+                {
+                valor[0]++;
+                if(valor[0]>valor[2])
+                    valorMaximo=valor[0];
+                }
+                else
+                {
+                    valor[1]++;
+                    if (valor[1]>valor[0] && valor[1]>valor[2])
+                    {
+                        valorMaximo=valor[1];
+                    }
 
-            putchar('*');
+                }
 
-        } //for(int i=0; i<longitud; i++)
+            }
+            /// end acumulador
+             //if (listado[i].edad > 35)
+        } //if(listado[i].estado==OCUPADO)
+    }
+
+
+    for(i=valorMaximo; i>0; i--)
+    {
+        for(j=0;j<TAGS;j++)
+        {
+            if(valor[j]>=i)
+                printf("\t*");
+            else
+                printf("\t");
+        }
         putchar('\n');
-    } //for(int j=0;j<3;j++)
+    }
+
+    printf("\t%s\t%s\t%s\n",tagNombre[0],tagNombre[1],tagNombre[2]);
 
     return 0;
 }
-*/
+
 int ePers_graficoHorizontal(ePersona listado[], int longitud)
 {
     char tagNombre[3][10] = {"<19","19-35",">35"};
