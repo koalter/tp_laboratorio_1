@@ -35,8 +35,8 @@ int main()
                 ePers_ordenar(persona,TAMANIO);
                 break;
             case 4:
-                ePers_grafico(persona,TAMANIO);
-                //ePers_grafico(persona,TAMANIO,"<19","19-35",">35");
+                ePers_acumulador(persona,TAMANIO);
+                //ePers_graficoHorizontal(persona,TAMANIO);
                 break;
             default:
                 opcion = 9;

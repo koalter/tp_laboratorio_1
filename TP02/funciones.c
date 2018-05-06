@@ -132,7 +132,7 @@ int ePers_buscarPorId(ePersona listado[] ,int limite, int id)
 
 void ePers_mostrarUno(ePersona parametro)
 {
-    printf("%10s %5d %10d\n",parametro.nombre,parametro.edad,parametro.dni);
+    printf("%10s %5d %10d \n",parametro.nombre,parametro.edad,parametro.dni);
 
 }
 
@@ -278,58 +278,119 @@ void ePers_ordenar(ePersona persona[] ,int longitud)
     ePers_mostrarListado(persona,longitud);
 }
 
-int ePers_grafico(ePersona listado[],int longitud)
+int ePers_acumulador(ePersona listado[], int longitud)
 {
-    int tagValor[3];
-    char tagNombre[3][10] = {"<19","19-35",">35"};
-    int retorno = -1;
-    int i;
-    int j;
-
-    ePers_acumulador(listado,longitud,tagValor);
-
-    if(longitud > 0 && listado != NULL)
-    {
-        retorno = 0;
-        for(i=0; i<3; i++)
-        {
-            if(listado[i].estado==OCUPADO)
-            {
-                for(j=0; j<tagValor[i]; j++)
-                {
-                    printf("%d",tagValor[i]);
-                    system("pause");
-                    printf("%s\t",tagNombre[i]);
-                    putchar('*');
-                    putchar('\n');
-                } //for(j=0; j<longitud; j++)
-            } //if(listado[i].estado==OCUPADO)
-        } //for(i=0; i<longitud; i++)
-    } //if(longitud > 0 && listado != NULL)
-
-    return retorno;
-}
-
-int ePers_acumulador(ePersona listado[], int limite, int* valor)
-{
-    valor=0;
-    for(int i=0; i<limite; i++)
+    int valor[3] = {0};
+    int valorMaximo;
+    int indice=0;
+    for(int i=0; i<longitud; i++)
     {
         if(listado[i].estado==OCUPADO)
         {
+            /// acumulador
             if (listado[i].edad > 35)
+            {
                 valor[2]++;
-            else if (listado[i].edad < 18)
-                valor[0]++;
+                valorMaximo=valor[2];
+                indice=3;
+            }
             else
-                valor[1]++;
+            {
+                if (listado[i].edad < 18)
+                {
+                valor[0]++;
+                if(valor[0]>valor[2])
+                    valorMaximo=valor[0];
+                    indice=1;
+                }
+                else
+                {
+                    valor[1]++;
+                    if (valor[1]>valor[0] && valor[1]>valor[2])
+                    {
+                        valorMaximo=valor[1];
+                        indice=2;
+                    }
+
+                }
+
+            }
+            /// end acumulador
              //if (listado[i].edad > 35)
         } //if(listado[i].estado==OCUPADO)
     }
-
     printf("Los menores de 19 son: %d\n", valor[0]);
     printf("Los que tienen entre 19 y 35 son: %d\n", valor[1]);
     printf("Los mayores de 35 son: %d\n", valor[2]);
+    printf("El maximo valor es %d y corresponde al indice %d\n",valorMaximo,indice);
+    return valor;
+}
+/*
+int ePers_graficoVertical(ePersona listado[],int longitud)
+{
+    int valor[3] = ePers_acumulador(listado,longitud);
+    int valorMax =
+    char tagNombre[3][10] = {"<19","19-35",">35"};
+    int i;
+    int j;
+
+    for(i=0; i<valor[j]; i++)
+    {
+        printf("%s \t", tagNombre[j]);
+        for(j=0;j<3;j++)
+        {
+
+            putchar('*');
+
+        } //for(int i=0; i<longitud; i++)
+        putchar('\n');
+    } //for(int j=0;j<3;j++)
+
+    return 0;
+}
+*/
+int ePers_graficoHorizontal(ePersona listado[], int longitud)
+{
+    char tagNombre[3][10] = {"<19","19-35",">35"};
+    int valor[3] = {0};
+    int i;
+    int j;
+
+    /// acumulador
+    for(i=0; i<longitud; i++)
+    {
+        if(listado[i].estado==OCUPADO)
+        {
+
+            if (listado[i].edad > 35)
+                valor[2]++;
+            else if (listado[i].edad < 19)
+                valor[0]++;
+            else
+                valor[1]++;
+
+
+        } //if(listado[i].estado==OCUPADO)
+    } //for(int i=0; i<longitud; i++)
+    printf("\nLos menores de 19 son: %d\n", valor[0]);
+    printf("Los que tienen entre 19 y 35 son: %d\n", valor[1]);
+    printf("Los mayores de 35 son: %d\n", valor[2]);
+    /// end acumulador
+
+    /// graficador
+    for(j=0;j<3;j++)
+    {
+        printf("%s \t", tagNombre[j]);
+        for(i=0; i<valor[j]; i++)
+        {
+
+            putchar('*');
+
+        } //for(int i=0; i<longitud; i++)
+        putchar('\n');
+    } //for(int j=0;j<3;j++)
+    /// end graficador
+
 
     return 0;
 }

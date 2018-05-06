@@ -32,5 +32,7 @@ char* pedirNombre(char mensaje[], char cadena[]);
 int pedirEntero(char mensaje[]);
 
 void bubbleSort(ePersona[], int longitud);
-int ePers_grafico(ePersona listado[],int longitud);
-int ePers_acumulador(ePersona listado[], int limite, int* valor);
+int ePers_acumulador(ePersona listado[], int limite);
+
+int ePers_graficoHorizontal(ePersona listado[], int longitud);
+int ePers_graficoVertical(ePersona listado[],int longitud);
