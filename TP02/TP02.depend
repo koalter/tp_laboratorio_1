@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1525727979 source:c:\users\ruben orlando\desktop\tp_laboratorio_1\tp02\lib.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lib.h"
+
+1525727979 c:\users\ruben orlando\desktop\tp_laboratorio_1\tp02\lib.h
+
+1525727979 source:c:\users\ruben orlando\desktop\tp_laboratorio_1\tp02\main.c
+	<stdio.h>
+	<stdlib.h>
+	"lib.h"
+

@@ -192,7 +192,7 @@ void ePers_baja(ePersona persona[] ,int limite)
     printf("\nBAJA DE CONTACTO\n");
     printf("Seleccione la posicion a dar de baja: ");
     scanf("%d", &i);
-    while(i==0 || i>limite)
+    while(i==0 || i>limite || persona[i-1].estado == LIBRE)
     {
         printf("ID incorrecto, ingrese otra posicion: ");
         scanf("%d", &i);
