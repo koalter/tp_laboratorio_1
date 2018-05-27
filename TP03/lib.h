@@ -7,9 +7,9 @@ typedef struct
     char titulo[30];
     char genero[30];
     int duracion;
-    char descripcion[140];
+    char descripcion[500];
     int puntaje;
-    char linkImagen[100];
+    char linkImagen[500];
 }eMovie;
 
 #endif // LIB_H_INCLUDED
@@ -29,8 +29,25 @@ int init(eMovie *movie);
  *
  */
 int alta(eMovie*);
-void baja(eMovie*);
-void modificacion(eMovie*);
+
+/** \brief BORRA UNA PELICULA AL ARRAY LOCAL Y SE SINCRONIZA CON EL ARCHIVO pelicula.dat
+ *
+ * \param eMovie* ESTRUCTURA LOCAL
+ * \return int DEVUELVE 1 SI LOGRO OPERAR COMPLETAMENTE, 0 SI NO PUDO ABRIRSE pelicula.dat
+ *
+ */
+int baja(eMovie*);
+
+/** \brief MODIFICA UNA PELICULA DEL ARRAY LOCAL Y LO SINCRONIZA AL ARCHIVO pelicula.dat
+ *
+ * \param eMovie* ESTRUCTURA LOCAL
+ * \return int DEVUELVE 1 SI LOGRO OPERAR COMPLETAMENTE, 0 SI NO PUDO ABRIRSE pelicula.dat
+ *
+ */
+int modificar(eMovie*);
+
+void mostrar(eMovie *movie);
+void mostrarUno(eMovie *movie);
 
 int getInt(char *mensaje);
 char* getString(char *mensaje, char *retorno);

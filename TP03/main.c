@@ -16,8 +16,8 @@ int main()
         printf("---TRABAJO PRACTICO 3---\n");
         printf("\n1. Agregar pelicula\n");
         printf("2. Borrar pelicula\n");
-        printf("3.nombre_de_la_opcion\n");
-        printf("4.nombre_de_la_opcion\n");
+        printf("3. Modificar pelicula\n");
+        printf("4. Generar pagina web\n");
         printf("9.Salir\n");
 
         printf("\nIngrese una opcion: ");
@@ -34,9 +34,11 @@ int main()
                 baja(movie);
                 break;
             case 3:
-
+                printf("\nMODIFICAR PELICULA.\n");
+                modificar(movie);
                 break;
             case 4:
+                mostrarUno(movie);
                 break;
             default:
                 opcion = 9;
