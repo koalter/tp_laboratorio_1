@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1527380187 source:c:\##gitclone\tp03\main.c
+	<stdio.h>
+	<stdlib.h>
+	"lib.h"
+
+1527380540 c:\##gitclone\tp03\lib.h
+
+1527380540 source:c:\##gitclone\tp03\lib.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"lib.h"
+
