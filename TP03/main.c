@@ -2,14 +2,20 @@
 #include <stdlib.h>
 #include "lib.h"
 
+/**< agregar limitador de elementos al mostrar
+*    agregar verificadores datos al abm
+     baja: lograr que la estructura auxiliar pise a la estructura original
+*/
+
 int main()
 {
-    eMovie movie[100];
+    eMovie movie[100] = {};
     int opcion;
+    int operacionExitosa;
 
-    if(init(movie) == 0) // if(!init(movie))
+    if(init(movie,100) == 0) // if(!init(movie))
     {
-        printf("No se encontro el archivo pelicula.dat!\n\n");
+        printf("No se pudo encontrar el archivo pelicula.dat!\n\n");
     }
     do
     {
@@ -18,7 +24,7 @@ int main()
         printf("2. Borrar pelicula\n");
         printf("3. Modificar pelicula\n");
         printf("4. Generar pagina web\n");
-        printf("9.Salir\n");
+        printf("9. Salir\n");
 
         printf("\nIngrese una opcion: ");
         scanf("%d", &opcion);
@@ -27,17 +33,35 @@ int main()
         {
             case 1:
                 printf("\nAGREGAR PELICULA.\n");
-                alta(movie);
+                //alta(movie);
+                printf("\nel archivo pelicula.dat contiene %d entradas\n",alta(movie));
                 break;
             case 2:
                 printf("\nBORRAR PELICULA.\n");
-                baja(movie);
+                operacionExitosa = baja(movie);
+                if(operacionExitosa)
+                {
+                    printf("\nEL PROCESO SE REALIZO CON EXITO!\n");
+                }
+                else
+                {
+                    printf("EL PROCESO NO PUDO SER COMPLETADO!\n\n");
+                }
                 break;
             case 3:
                 printf("\nMODIFICAR PELICULA.\n");
-                modificar(movie);
+                operacionExitosa = modificar(movie);
+                if(operacionExitosa)
+                {
+                    printf("\nEL PROCESO SE REALIZO CON EXITO!\n");
+                }
+                else
+                {
+                    printf("EL PROCESO NO PUDO SER COMPLETADO!\n\n");
+                }
                 break;
             case 4:
+                //mostrar(movie);
                 mostrarUno(movie);
                 break;
             default:
@@ -51,12 +75,3 @@ int main()
 
     return 0;
 }
-
-/*
-while (fread(&myrecord,sizeof(struct person),1,fp) != NULL)
-
-while (!feof(fp))
-{
-    fread(&myrecord,sizeof(struct person),1,fp)
-}
-*/
