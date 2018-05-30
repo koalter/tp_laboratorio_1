@@ -8,11 +8,8 @@
 *   MODI: 1.PIDO INDICE(C); 2.VERIFICO PROCESO(B); 3.PIDO DATOS(A); 4.VERIFICO PROCESO(B)
 */
 
-/**< X agregar limitador de elementos al mostrar
-*    X agregar verificadores datos al abm (IMPORTANTE LA DURACION)
-     X baja: lograr que la estructura auxiliar pise a la estructura original
-     aplicar reglas de estructura ESTRUCTURA GENERICA DE UN ABM
-     IMPORTANTE PARA FUNC_MODIFICAR: NECESITO QUE ME SALTEE DATOS AL PRESIONAR ENTER
+/**< aplicar reglas de estructura ESTRUCTURA GENERICA DE UN ABM
+*    IMPORTANTE PARA FUNC_MODIFICAR: NECESITO QUE ME SALTEE DATOS AL PRESIONAR ENTER
 */
 
 int main()
