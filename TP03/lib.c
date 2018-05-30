@@ -23,6 +23,7 @@ int init(eMovie *movie, int length)
                 fread(&movie[i],sizeof(eMovie),1,fp);
                 i++;
             }
+            fclose(fp);
             return 1;
         }
     }//if (movie != NULL && length > 0)
@@ -34,14 +35,30 @@ int alta(eMovie *movie)
     FILE *fp;
     int i = 0;
     int retorno = 0;
+    int flag;
 /// PASO LOS DATOS A LA ESTRUCTURA LOCAL
-    for(i=0;(movie+i)->id != 0;i++);
-    (movie+i)->id = i+1;
+    for(i=0;(movie+i)->duracion != 0;i++);
     getString("\nIngrese titulo: ",(movie+i)->titulo);
     getString("Ingrese genero: ",(movie+i)->genero);
     (movie+i)->duracion = getInt("Ingrese duracion en minutos: ");
+    for(flag = 0;(movie+i)->duracion < 1 && flag < 2;flag++)
+    {
+        (movie+i)->duracion = getInt("NUMERO INVALIDO: Ingrese duracion en minutos: ");
+    }
+    if(flag > 2)
+    {
+        (movie+i)->duracion = 1;
+    }
     getString("Ingrese sinopsis: ",(movie+i)->descripcion);
-    (movie+i)->puntaje = getInt("Ingrese puntaje: ");
+    (movie+i)->puntaje = getInt("Ingrese puntaje del 1 al 100: ");
+    for(flag = 0;(movie+i)->puntaje < 1 || (movie+i)->puntaje > 100 && flag < 2;flag++)
+    {
+        (movie+i)->puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje del 1 al 100: ");
+    }
+    if(flag > 2)
+    {
+        (movie+i)->puntaje = 1;
+    }
     getString("Ingrese link de imagen: ",(movie+i)->linkImagen);
 /// COPIO LOS DATOS DEL ARRAY A UN ARCHIVO pelicula.dat
     fp = fopen("pelicula.dat","wb");
@@ -49,7 +66,7 @@ int alta(eMovie *movie)
     {
         printf("\nEl archivo no existe.\nCreando archivo...");
     }
-    for(i=0;(movie+i)->id != 0;i++)
+    for(i=0;(movie+i)->duracion != 0;i++)
     {
         fwrite((movie+i),sizeof(eMovie),1,fp);
         retorno++;
@@ -61,9 +78,10 @@ int alta(eMovie *movie)
 int baja(eMovie *movie)
 {
     FILE *fp;
-    eMovie auxiliar[100];
+    //eMovie auxiliar[100];
     int i;
-    int j = 0;
+    int j;
+    int acumulador = 0;
     char respuesta;
     fp = fopen("pelicula.dat","wb");
     if(fp == NULL)
@@ -77,28 +95,29 @@ int baja(eMovie *movie)
     respuesta = getch();
     if(respuesta == 's' || respuesta == 'S')
     {
-        (movie+i)->id = -1;
+        (movie+i)->duracion = -1;
     }
     else
     {
         return 0;
     }
 /// 2. COPIO EL ARRAY LOCAL A UN ARRAY AUXILIAR OMITIENDO EL ELIMINADO
-    for(i=0;(movie+i)->id != 0;i++)
+    for(i=0;(movie+i)->duracion != 0;i++)
     {
-        if((movie+i)->id == -1)
+        for(j=i+acumulador;(movie+j)->duracion == -1;j++)
         {
-            continue;
+            acumulador++;
         }
-        auxiliar[j] = movie[i];
-        auxiliar[j].id = j+1;
-        j++;
+        if(i!=j)
+        {
+            movie[i] = movie[j];
+        }
+
     }
-    movie = auxiliar;
 /// 3. SOBREESCRIBO EL ARCHIVO pelicula.dat CON EL ARRAY AUXILIAR
-    for(i=0;(auxiliar+i)->id != 0;i++)
+    for(i=0;(movie+i)->duracion != 0;i++)
     {
-        fwrite(&auxiliar[i],sizeof(eMovie),1,fp);
+        fwrite(&movie[i],sizeof(eMovie),1,fp);
     }
     fclose(fp);
     return 1;
@@ -109,6 +128,7 @@ int modificar(eMovie *movie)
     FILE *fp;
     eMovie auxiliar;
     int index;
+    int flag;
     char respuesta;
     fp = fopen("pelicula.dat","wb");
     if(fp == NULL)
@@ -118,12 +138,27 @@ int modificar(eMovie *movie)
 /// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO MODIFICAR
     index = mostrarUno(movie);
 /// 2. LE PASO LOS DATOS A UN ARRAY AUXILIAR (VERIFICO) Y LOS COPIO AL LOCAL
-    auxiliar.id = index+1;
     getString("Ingrese titulo: ",auxiliar.titulo);
     getString("Ingrese genero: ",auxiliar.genero);
     auxiliar.duracion = getInt("Ingrese duracion en minutos: ");
+    for(flag = 0;auxiliar.duracion < 1 && flag < 2;flag++)
+    {
+        auxiliar.duracion = getInt("NUMERO INVALIDO: Ingrese duracion en minutos: ");
+    }
+    if(flag > 2)
+    {
+        auxiliar.duracion = 1;
+    }
     getString("Ingrese sinopsis: ",auxiliar.descripcion);
     auxiliar.puntaje = getInt("Ingrese puntaje: ");
+    for(flag = 0;auxiliar.puntaje < 1 || auxiliar.puntaje > 100 && flag < 2;flag++)
+    {
+        auxiliar.puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje del 1 al 100: ");
+    }
+    if(flag > 2)
+    {
+        auxiliar.puntaje = 1;
+    }
     getString("Ingrese link de imagen: ",auxiliar.linkImagen);
 
     printf("\nTITULO: %s \nGENERO: %s \nDURACION: %d \nSINOPSIS: %s \nPUNTAJE: %d \nIMAGEN: %s \n",
@@ -140,7 +175,7 @@ int modificar(eMovie *movie)
         return 0;
     }
 /// 3. SOBREESCRIBO EL ARCHIVO pelicula.dat CON EL ARRAY LOCAL MODIFICADO
-    for(index=0;(movie+index)->id != 0;index++)
+    for(index=0;(movie+index)->duracion != 0;index++)
     {
         fwrite(&movie[index],sizeof(eMovie),1,fp);
     }
@@ -148,27 +183,49 @@ int modificar(eMovie *movie)
     return 1;
 }
 
+int generarWeb(eMovie *movie)
+{
+    FILE *html;
+    int i;
+
+    if(movie->duracion <= 0)
+    {
+        return 0;
+    }
+    html = fopen("listado\\index.html","w");
+
+    fprintf(html,"<!DOCTYPE html>\n<!-- Template by Quackit.com -->\n<html lang='en'>\n<head>\n\t<meta charset='utf-8'>\n\t<meta http-equiv='X-UA-Compatible' content='IE=edge'>\n\t<meta name='viewport' content='width=device-width, initial-scale=1'>\n\t<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->\n\t<title>Lista peliculas</title>\n\t<!-- Bootstrap Core CSS -->\n\t<link href='css/bootstrap.min.css' rel='stylesheet'>\n\t<!-- Custom CSS: You can use this stylesheet to override any Bootstrap styles and/or apply your own styles -->\n\t<link href='css/custom.css' rel='stylesheet'>\n\t<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->\n\t<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->\n\t<!--[if lt IE 9]>\n\t\t<script src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js'></script>\n\t\t<script src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js'></script>\n\t<![endif]-->\n</head>\n<body>\n\t<div class='container'>\n\t\t<div class='row'>");
+    for(i=0;(movie+i)->duracion != 0;i++)
+    {
+        fprintf(html,"\n\t\t<article class='col-md-4 article-intro'>\n\t\t\t<a href='#'>\n\t\t\t\t<img class='img-responsive img-rounded' src='%s' alt=''>\n\t\t\t</a>\n\t\t\t<h3>\n\t\t\t\t<a href='#'>%s</a>\n\t\t\t</h3>\n\t\t\t<ul>\n\t\t\t\t<li>G&#233;nero:%s</li>\n\t\t\t\t<li>Puntaje:%d</li>\n\t\t\t\t<li>Duraci&#243;n:%d minutos</li>\n\t\t\t</ul>\n\t\t\t<p>%s</p>\n\t\t</article>",(movie+i)->linkImagen,(movie+i)->titulo,(movie+i)->genero,(movie+i)->puntaje,(movie+i)->duracion,(movie+i)->descripcion);
+    }
+    fprintf(html,"\n\t\t</div>\n\t\t<!-- /.row -->\n\t</div>\n\t<!-- /.container -->\n\t<!-- jQuery -->\n\t<script src='js/jquery-1.11.3.min.js'></script>\n\t<!-- Bootstrap Core JavaScript -->\n\t<script src='js/bootstrap.min.js'></script>\n\t<!-- IE10 viewport bug workaround -->\n\t<script src='js/ie10-viewport-bug-workaround.js'></script>\n\t<!-- Placeholder Images -->\n\t<script src='js/holder.min.js'></script>\n</body>\n</html>");
+    fclose(html);
+
+    return 1;
+}
 
 /**< FUNCIONES DE DESARROLLO UNICAMENTE */
 void mostrar(eMovie *movie)
 {
     int i;
-    for(i=0;(movie+i)->id == 0;i++)
+    for(i=0;/*i<3*/(movie+i)->duracion != 0;i++)
     {
-        //printf("%d--%s\n",(movie+i)->id,(movie+i)->titulo);
-        printf("%d--%d\n",(movie+i)->id,i);
+        printf("%d--%s\n",i+1,(movie+i)->titulo);
+        //printf("%d--%d\n",(movie+i)->id,i);
     }
 }
 
 int mostrarUno(eMovie *movie)
 {
     int i;
-    for(i=0;(movie+i)->id != 0;i++)
+    /*for(i=0;(movie+i)->duracion != 0;i++)
     {
         printf("%d--%s\n",(movie+i)->id,(movie+i)->titulo);
-    }
+    }*/
+    mostrar(movie);
     i = getInt("Ingrese numero de pelicula: ") - 1;
-    /*while((movie+i)->id == 0)
+    /*while((movie+i)->duracion == 0)
     {
         i = getInt("NUMERO INVALIDO:Ingrese numero de pelicula: ") - 1;
     }*/

@@ -2,9 +2,16 @@
 #include <stdlib.h>
 #include "lib.h"
 
-/**< agregar limitador de elementos al mostrar
-*    agregar verificadores datos al abm
-     baja: lograr que la estructura auxiliar pise a la estructura original
+/** ESTRUCTURA GENERICA DE UN ABM:
+*   ALTA: 1.PIDO DATOS(A); 2.VERIFICO PROCESO(B); 3.COPIO DATOS
+*   BAJA: 1.PIDO INDICE(C); 2.VERIFICO PROCESO(B); 3.ELIMINO DATOS
+*   MODI: 1.PIDO INDICE(C); 2.VERIFICO PROCESO(B); 3.PIDO DATOS(A); 4.VERIFICO PROCESO(B)
+*/
+
+/**< X agregar limitador de elementos al mostrar
+*    X agregar verificadores datos al abm (IMPORTANTE LA DURACION)
+     X baja: lograr que la estructura auxiliar pise a la estructura original
+     aplicar reglas de estructura ESTRUCTURA GENERICA DE UN ABM
 */
 
 int main()
@@ -24,9 +31,11 @@ int main()
         printf("2. Borrar pelicula\n");
         printf("3. Modificar pelicula\n");
         printf("4. Generar pagina web\n");
-        printf("9. Salir\n");
+        printf("9. Salir\n\n");
 
-        printf("\nIngrese una opcion: ");
+        mostrar(movie);
+
+        printf("\n\nIngrese una opcion: ");
         scanf("%d", &opcion);
 
         switch(opcion)
@@ -61,8 +70,15 @@ int main()
                 }
                 break;
             case 4:
-                //mostrar(movie);
-                mostrarUno(movie);
+                operacionExitosa = generarWeb(movie);
+                if(operacionExitosa)
+                {
+                    printf("\nEL PROCESO SE REALIZO CON EXITO!\n");
+                }
+                else
+                {
+                    printf("EL PROCESO NO PUDO SER COMPLETADO!\n\n");
+                }
                 break;
             default:
                 opcion = 9;

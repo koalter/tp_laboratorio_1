@@ -46,6 +46,8 @@ int baja(eMovie*);
  */
 int modificar(eMovie*);
 
+int generarWeb(eMovie*);
+
 void mostrar(eMovie *movie);
 int mostrarUno(eMovie *movie);
 
