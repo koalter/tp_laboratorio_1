@@ -12,6 +12,7 @@
 *    X agregar verificadores datos al abm (IMPORTANTE LA DURACION)
      X baja: lograr que la estructura auxiliar pise a la estructura original
      aplicar reglas de estructura ESTRUCTURA GENERICA DE UN ABM
+     IMPORTANTE PARA FUNC_MODIFICAR: NECESITO QUE ME SALTEE DATOS AL PRESIONAR ENTER
 */
 
 int main()
@@ -42,8 +43,16 @@ int main()
         {
             case 1:
                 printf("\nAGREGAR PELICULA.\n");
-                //alta(movie);
-                printf("\nel archivo pelicula.dat contiene %d entradas\n",alta(movie));
+                operacionExitosa = alta(movie);
+                if(operacionExitosa)
+                {
+                    printf("\nEL PROCESO SE REALIZO CON EXITO!\n");
+                }
+                else
+                {
+                    printf("EL PROCESO NO PUDO SER COMPLETADO!\n\n");
+                }
+                /** BORRAR ESTO *//*printf("\nel archivo pelicula.dat contiene %d entradas\n",alta(movie));*/
                 break;
             case 2:
                 printf("\nBORRAR PELICULA.\n");

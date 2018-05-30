@@ -51,7 +51,7 @@ int alta(eMovie *movie)
     }
     getString("Ingrese sinopsis: ",(movie+i)->descripcion);
     (movie+i)->puntaje = getInt("Ingrese puntaje del 1 al 100: ");
-    for(flag = 0;(movie+i)->puntaje < 1 || (movie+i)->puntaje > 100 && flag < 2;flag++)
+    for(flag = 0;( (movie+i)->puntaje < 1 || (movie+i)->puntaje > 100 ) && flag < 2;flag++)
     {
         (movie+i)->puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje del 1 al 100: ");
     }
@@ -64,7 +64,7 @@ int alta(eMovie *movie)
     fp = fopen("pelicula.dat","wb");
     if(fp == NULL)
     {
-        printf("\nEl archivo no existe.\nCreando archivo...");
+        printf("\nEl archivo no existe.\nGenerando 'pelicula.dat'...!\n");
     }
     for(i=0;(movie+i)->duracion != 0;i++)
     {
@@ -78,7 +78,6 @@ int alta(eMovie *movie)
 int baja(eMovie *movie)
 {
     FILE *fp;
-    //eMovie auxiliar[100];
     int i;
     int j;
     int acumulador = 0;
@@ -151,7 +150,7 @@ int modificar(eMovie *movie)
     }
     getString("Ingrese sinopsis: ",auxiliar.descripcion);
     auxiliar.puntaje = getInt("Ingrese puntaje: ");
-    for(flag = 0;auxiliar.puntaje < 1 || auxiliar.puntaje > 100 && flag < 2;flag++)
+    for(flag = 0;( auxiliar.puntaje < 1 || auxiliar.puntaje > 100 ) && flag < 2;flag++)
     {
         auxiliar.puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje del 1 al 100: ");
     }
@@ -209,20 +208,15 @@ int generarWeb(eMovie *movie)
 void mostrar(eMovie *movie)
 {
     int i;
-    for(i=0;/*i<3*/(movie+i)->duracion != 0;i++)
+    for(i=0;(movie+i)->duracion != 0;i++)
     {
         printf("%d--%s\n",i+1,(movie+i)->titulo);
-        //printf("%d--%d\n",(movie+i)->id,i);
     }
 }
 
 int mostrarUno(eMovie *movie)
 {
     int i;
-    /*for(i=0;(movie+i)->duracion != 0;i++)
-    {
-        printf("%d--%s\n",(movie+i)->id,(movie+i)->titulo);
-    }*/
     mostrar(movie);
     i = getInt("Ingrese numero de pelicula: ") - 1;
     /*while((movie+i)->duracion == 0)
