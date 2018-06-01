@@ -9,7 +9,6 @@ int main()
     eMovie movie[SIZE] = {};
     int opcion;
     int operacionExitosa;
-    Nocturno skin = {0,"Activar"};
 
     if(init(movie,SIZE) == 0)
     {
@@ -22,10 +21,7 @@ int main()
         printf("2. Borrar pelicula\n");
         printf("3. Modificar pelicula\n");
         printf("4. Generar pagina web\n");
-        printf("5. %s modo Nocturno (BONUS HTML)\n", skin.mensaje);
         printf("\n9. Salir\n");
-
-        //printf("\nnocturno == %d\n\n",skin.toggle);
 
         //mostrar(movie,SIZE);
 
@@ -84,9 +80,6 @@ int main()
                     printf("EL PROCESO NO PUDO SER COMPLETADO!\n\n");
                 }
                 system("pause");
-                break;
-            case 5:
-                modoNocturno(&skin);
                 break;
             default:
                 break;

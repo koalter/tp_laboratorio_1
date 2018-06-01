@@ -115,6 +115,10 @@ int baja(eMovie *movie, int length)
 
 /// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO ELIMINAR (CONFIRMAMOS)
     i = mostrarUno(movie, length);
+    if (i < 0)
+    {
+        return 0;
+    }
     printf("\nESTE PROCESO NO PUEDE SER REVERTIDO! PRESIONE 'S' PARA CONFIRMAR LA SOLICITUD...");
     fflush(stdin);
     respuesta = getch();
@@ -167,6 +171,10 @@ int modificar(eMovie *movie, int length)
 
 /// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO MODIFICAR
     index = mostrarUno(movie,length);
+    if (index < 0)
+    {
+        return 0;
+    }
 /// 2. LE PASO LOS DATOS A UN ARRAY AUXILIAR (VERIFICO) Y LOS COPIO AL LOCAL
     getString("\nIngrese titulo: ",auxiliar.titulo);
     if(auxiliar.titulo[0] == '\0')
@@ -297,11 +305,17 @@ void mostrar(eMovie *movie, int length)
 int mostrarUno(eMovie *movie, int length)
 {
     int i;
+    int flag = 0;
     mostrar(movie,length);
     i = getInt("\nIngrese numero de pelicula: ") - 1;
-    while((movie+i)->duracion == 0 || i > length)
+    while((movie+i)->duracion == 0 || i > length || i == -1)
     {
+        if(flag > 1)
+        {
+            return -1;
+        }
         i = getInt("NUMERO INVALIDO:Ingrese numero de pelicula: ") - 1;
+        flag++;
     }
     printf("\nTITULO: %s \nGENERO: %s \nPUNTAJE: %d \nDURACION: %d \nSINOPSIS: %s \nIMAGEN: %s \n",
            movie[i].titulo,movie[i].genero,movie[i].puntaje,movie[i].duracion,movie[i].descripcion,movie[i].linkImagen);
@@ -360,29 +374,4 @@ int getIndex(eMovie *movie, int length)
     }
 
     return index;
-}
-
-/** \brief CAMBIA EL FONDO DEL ARCHIVO HTML A NEGRO O BLANCO DEPENDIENDO DE SI ESTA ACTIVADO O NO
- *
- * \param nocturno int* VARIABLE NUMERICA
- * \return void
- *
- */
-void modoNocturno(Nocturno *nocturno)
-{
-    FILE *fp;
-    fp = fopen("listado\\css\\custom.css","w");
-    if(nocturno->toggle)
-    {
-        nocturno->toggle = 0;
-        nocturno->mensaje = "Activar";
-        fprintf(fp,"body {\n\tpadding-top: 50px;\n\tcolor: #000000;\n\tbackground-color:#e4e4e4;\n\t}\n\nh1, h2, h3, h4, h5, h6 {\n\tcolor: black;\n\t}\n\n.feature {\n\tbackground-color: yellowgreen;\n\tcolor: greenyellow;\n\t}\n\n.article-intro {\n\tmargin-bottom: 25px;\n}\n\n.footer-blurb {\n\tpadding: 30px 0;\n\tbackground-color: goldenrod;\n\tcolor: black;\n}\n\n.footer-blurb-item {\n\tpadding: 30px;\n\t}\n\n.small-print {\n\tbackground-color: #fff;\n\tpadding: 30px 0;\n}");
-    }
-    else
-    {
-        nocturno->toggle = 1;
-        nocturno->mensaje = "Desactivar";
-        fprintf(fp,"body {\n\tpadding-top: 50px;\n\tcolor: #ffffff;\n\tbackground-color:#000000;\n\t}\n\nh1, h2, h3, h4, h5, h6 {\n\tcolor: black;\n\t}\n\n.feature {\n\tbackground-color: yellowgreen;\n\tcolor: greenyellow;\n\t}\n\n.article-intro {\n\tmargin-bottom: 25px;\n}\n\n.footer-blurb {\n\tpadding: 30px 0;\n\tbackground-color: goldenrod;\n\tcolor: black;\n}\n\n.footer-blurb-item {\n\tpadding: 30px;\n\t}\n\n.small-print {\n\tbackground-color: #fff;\n\tpadding: 30px 0;\n}");
-    }
-    fclose(fp);
 }
