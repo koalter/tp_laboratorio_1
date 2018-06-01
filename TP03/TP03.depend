@@ -12,15 +12,15 @@
 	<string.h>
 	"lib.h"
 
-1527820861 source:c:\##gitclone\tp_laboratorio_1\tp03\main.c
+1527825764 source:c:\##gitclone\tp_laboratorio_1\tp03\main.c
 	<stdio.h>
 	<stdlib.h>
 	<conio.h>
 	"lib.h"
 
-1527817245 c:\##gitclone\tp_laboratorio_1\tp03\lib.h
+1527825320 c:\##gitclone\tp_laboratorio_1\tp03\lib.h
 
-1527820796 source:c:\##gitclone\tp_laboratorio_1\tp03\lib.c
+1527826511 source:c:\##gitclone\tp_laboratorio_1\tp03\lib.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>

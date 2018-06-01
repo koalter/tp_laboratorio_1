@@ -361,3 +361,28 @@ int getIndex(eMovie *movie, int length)
 
     return index;
 }
+
+/** \brief CAMBIA EL FONDO DEL ARCHIVO HTML A NEGRO O BLANCO DEPENDIENDO DE SI ESTA ACTIVADO O NO
+ *
+ * \param nocturno int* VARIABLE NUMERICA
+ * \return void
+ *
+ */
+void modoNocturno(Nocturno *nocturno)
+{
+    FILE *fp;
+    fp = fopen("listado\\css\\custom.css","w");
+    if(nocturno->toggle)
+    {
+        nocturno->toggle = 0;
+        nocturno->mensaje = "Activar";
+        fprintf(fp,"body {\n\tpadding-top: 50px;\n\tcolor: #000000;\n\tbackground-color:#e4e4e4;\n\t}\n\nh1, h2, h3, h4, h5, h6 {\n\tcolor: black;\n\t}\n\n.feature {\n\tbackground-color: yellowgreen;\n\tcolor: greenyellow;\n\t}\n\n.article-intro {\n\tmargin-bottom: 25px;\n}\n\n.footer-blurb {\n\tpadding: 30px 0;\n\tbackground-color: goldenrod;\n\tcolor: black;\n}\n\n.footer-blurb-item {\n\tpadding: 30px;\n\t}\n\n.small-print {\n\tbackground-color: #fff;\n\tpadding: 30px 0;\n}");
+    }
+    else
+    {
+        nocturno->toggle = 1;
+        nocturno->mensaje = "Desactivar";
+        fprintf(fp,"body {\n\tpadding-top: 50px;\n\tcolor: #ffffff;\n\tbackground-color:#000000;\n\t}\n\nh1, h2, h3, h4, h5, h6 {\n\tcolor: black;\n\t}\n\n.feature {\n\tbackground-color: yellowgreen;\n\tcolor: greenyellow;\n\t}\n\n.article-intro {\n\tmargin-bottom: 25px;\n}\n\n.footer-blurb {\n\tpadding: 30px 0;\n\tbackground-color: goldenrod;\n\tcolor: black;\n}\n\n.footer-blurb-item {\n\tpadding: 30px;\n\t}\n\n.small-print {\n\tbackground-color: #fff;\n\tpadding: 30px 0;\n}");
+    }
+    fclose(fp);
+}

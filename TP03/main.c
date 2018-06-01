@@ -2,19 +2,16 @@
 #include <stdlib.h>
 #include <conio.h>
 #include "lib.h"
-#define SIZE 100
-
-int settings(int*,int*);
+#define SIZE 10
 
 int main()
 {
-    eMovie movie[100] = {};
+    eMovie movie[SIZE] = {};
     int opcion;
     int operacionExitosa;
-    int consejos=1;
-    int nocturno=0;
+    Nocturno skin = {0,"Activar"};
 
-    if(init(movie,100) == 0)
+    if(init(movie,SIZE) == 0)
     {
         printf("No se pudo encontrar el archivo pelicula.dat!\n\n");
     }
@@ -25,14 +22,14 @@ int main()
         printf("2. Borrar pelicula\n");
         printf("3. Modificar pelicula\n");
         printf("4. Generar pagina web\n");
-        printf("5. (BONUS) Ajustes\n");
-        printf("\n9. Salir\n\n");
+        printf("5. %s modo Nocturno (BONUS HTML)\n", skin.mensaje);
+        printf("\n9. Salir\n");
 
-        //printf("\nconsejos == %d \nnocturno == %d\n\n",consejos,nocturno);
+        //printf("\nnocturno == %d\n\n",skin.toggle);
 
         //mostrar(movie,SIZE);
 
-        opcion = getInt("\n\nIngrese una opcion: ");
+        opcion = getInt("\nIngrese una opcion: ");
 
         switch(opcion)
         {
@@ -89,8 +86,7 @@ int main()
                 system("pause");
                 break;
             case 5:
-                system("cls");
-                settings(&consejos,&nocturno);
+                modoNocturno(&skin);
                 break;
             default:
                 break;
@@ -98,66 +94,6 @@ int main()
 
         system("cls");
     }while(opcion != 9);
-
-    return 0;
-}
-
-int settings(int *consejos, int *nocturno)
-{
-    int opcion;
-    char *toggleUno="Desactivar";
-    char *toggleDos="Activar";
-
-    if(*consejos)
-        toggleUno = "Desactivar";
-    else
-        toggleUno = "Activar";
-
-    if(*nocturno)
-        toggleDos = "Desactivar";
-    else
-        toggleDos = "Activar";
-
-    do
-    {
-        printf("\n1. %s consejos\n", toggleUno);
-        printf("2. %s modo Nocturno (HTML)\n", toggleDos);
-        printf("\n3. Volver al menu principal\n");
-
-        opcion = getInt("\n\nIngrese una opcion: ");
-
-        switch(opcion)
-        {
-            case 1:
-                if(*consejos)
-                {
-                    *consejos = 0;
-                    toggleUno = "Activar";
-                }
-                else
-                {
-                    *consejos = 1;
-                    toggleUno = "Desactivar";
-                }
-                break;
-            case 2:
-                if(*nocturno)
-                {
-                    *nocturno = 0;
-                    toggleDos = "Activar";
-                }
-                else
-                {
-                    *nocturno = 1;
-                    toggleDos = "Desactivar";
-                }
-                break;
-            default:
-                break;
-        }
-
-        system("cls");
-    }while(opcion != 3);
 
     return 0;
 }
