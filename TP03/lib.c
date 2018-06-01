@@ -4,6 +4,12 @@
 #include <conio.h>
 #include "lib.h"
 
+/** \brief CARGA LOS DATOS DE pelicula.dat AL ARRAY LOCAL
+ *
+ * \param movie eMovie* ESTRUCTURA DE LAS PELICULAS
+ * \return int DEVUELVE 1 SI CARGO TODOS LOS DATOS, 0 SI EL ARCHIVO NO EXISTE, -1 SI HUBO UN ERROR EN LA CARGA DEL ARRAY
+ *
+ */
 int init(eMovie *movie, int length)
 {
     FILE *fp;
@@ -30,35 +36,52 @@ int init(eMovie *movie, int length)
     return -1;
 }
 
-int alta(eMovie *movie)
+/** \brief AGREGA UNA PELICULA AL ARCHIVO pelicula.dat Y LO SINCRONIZA CON EL ARRAY LOCAL
+ *
+ * \param eMovie* ESTRUCTURA LOCAL
+ * \return int NOS DEBE DEVOLVER LA CANTIDAD DE ESTRUCTURAS QUE SE COPIARON AL ARCHIVO
+ *
+ */
+int alta(eMovie *movie, int length)
 {
     FILE *fp;
-    int i = 0;
+    int i;
     int retorno = 0;
-    int flag;
+    int flag = 0;
 /// PASO LOS DATOS A LA ESTRUCTURA LOCAL
-    for(i=0;(movie+i)->duracion != 0;i++);
+    i = getIndex(movie, length);
+    if(i < 0)
+    {
+        return 0;
+    }
+
     getString("\nIngrese titulo: ",(movie+i)->titulo);
+    while((movie+i)->titulo[0] == '\0')
+    {
+        if(flag == 1)
+        {
+            return 0;
+        }
+        getString("\nDebe ingresar un titulo para continuar: ",(movie+i)->titulo);
+        flag++;
+    }
+
     getString("Ingrese genero: ",(movie+i)->genero);
+
     (movie+i)->duracion = getInt("Ingrese duracion en minutos: ");
-    for(flag = 0;(movie+i)->duracion < 1 && flag < 2;flag++)
+    while((movie+i)->duracion < 1)
     {
         (movie+i)->duracion = getInt("NUMERO INVALIDO: Ingrese duracion en minutos: ");
     }
-    if(flag > 2)
-    {
-        (movie+i)->duracion = 1;
-    }
+
     getString("Ingrese sinopsis: ",(movie+i)->descripcion);
-    (movie+i)->puntaje = getInt("Ingrese puntaje del 1 al 100: ");
-    for(flag = 0;( (movie+i)->puntaje < 1 || (movie+i)->puntaje > 100 ) && flag < 2;flag++)
+
+    (movie+i)->puntaje = getInt("Ingrese puntaje (100 maximo): ");
+    while((movie+i)->puntaje > 100)
     {
-        (movie+i)->puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje del 1 al 100: ");
+        (movie+i)->puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje (100 maximo): ");
     }
-    if(flag > 2)
-    {
-        (movie+i)->puntaje = 1;
-    }
+
     getString("Ingrese link de imagen: ",(movie+i)->linkImagen);
 /// COPIO LOS DATOS DEL ARRAY A UN ARCHIVO pelicula.dat
     fp = fopen("pelicula.dat","wb");
@@ -72,23 +95,26 @@ int alta(eMovie *movie)
         retorno++;
     }
     fclose(fp);
+
     return retorno;
 }
 
-int baja(eMovie *movie)
+/** \brief BORRA UNA PELICULA AL ARRAY LOCAL Y SE SINCRONIZA CON EL ARCHIVO pelicula.dat
+ *
+ * \param eMovie* ESTRUCTURA LOCAL
+ * \return int DEVUELVE 1 SI LA FUNCION SE EJECUTA CON EXITO, CASO CONTRARIO DEVUELVE 0
+ *
+ */
+int baja(eMovie *movie, int length)
 {
     FILE *fp;
     int i;
     int j;
     int acumulador = 0;
     char respuesta;
-    fp = fopen("pelicula.dat","wb");
-    if(fp == NULL)
-    {
-        return 0;
-    }
+
 /// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO ELIMINAR (CONFIRMAMOS)
-    i = mostrarUno(movie);
+    i = mostrarUno(movie, length);
     printf("\nESTE PROCESO NO PUEDE SER REVERTIDO! PRESIONE 'S' PARA CONFIRMAR LA SOLICITUD...");
     fflush(stdin);
     respuesta = getch();
@@ -111,9 +137,13 @@ int baja(eMovie *movie)
         {
             movie[i] = movie[j];
         }
-
     }
 /// 3. SOBREESCRIBO EL ARCHIVO pelicula.dat CON EL ARRAY AUXILIAR
+    fp = fopen("pelicula.dat","wb");
+    if(fp == NULL)
+    {
+        return 0;
+    }
     for(i=0;(movie+i)->duracion != 0;i++)
     {
         fwrite(&movie[i],sizeof(eMovie),1,fp);
@@ -122,45 +152,70 @@ int baja(eMovie *movie)
     return 1;
 }
 
-int modificar(eMovie *movie)
+/** \brief MODIFICA UNA PELICULA DEL ARRAY LOCAL Y LO SINCRONIZA AL ARCHIVO pelicula.dat
+ *
+ * \param eMovie* ESTRUCTURA LOCAL
+ * \return int DEVUELVE 1 SI LA FUNCION SE EJECUTA CON EXITO, CASO CONTRARIO DEVUELVE 0
+ *
+ */
+int modificar(eMovie *movie, int length)
 {
     FILE *fp;
     eMovie auxiliar;
     int index;
-    int flag;
     char respuesta;
-    fp = fopen("pelicula.dat","wb");
-    if(fp == NULL)
-    {
-        return 0;
-    }
+
 /// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO MODIFICAR
-    index = mostrarUno(movie);
+    index = mostrarUno(movie,length);
 /// 2. LE PASO LOS DATOS A UN ARRAY AUXILIAR (VERIFICO) Y LOS COPIO AL LOCAL
-    getString("Ingrese titulo: ",auxiliar.titulo);
-    getString("Ingrese genero: ",auxiliar.genero);
-    auxiliar.duracion = getInt("Ingrese duracion en minutos: ");
-    for(flag = 0;auxiliar.duracion < 1 && flag < 2;flag++)
+    getString("\nIngrese titulo: ",auxiliar.titulo);
+    if(auxiliar.titulo[0] == '\0')
     {
+        strcpy(auxiliar.titulo,(movie+index)->titulo);
+    }
+
+    getString("Ingrese genero: ",auxiliar.genero);
+    if(auxiliar.genero[0] == '\0')
+    {
+        strcpy(auxiliar.genero,(movie+index)->genero);
+    }
+
+    auxiliar.duracion = getInt("Ingrese duracion en minutos: ");
+    while(auxiliar.duracion < 1)
+    {
+        if(auxiliar.duracion == 0)
+        {
+            auxiliar.duracion = (movie+index)->duracion;
+            break;
+        }
         auxiliar.duracion = getInt("NUMERO INVALIDO: Ingrese duracion en minutos: ");
     }
-    if(flag > 2)
-    {
-        auxiliar.duracion = 1;
-    }
+
     getString("Ingrese sinopsis: ",auxiliar.descripcion);
-    auxiliar.puntaje = getInt("Ingrese puntaje: ");
-    for(flag = 0;( auxiliar.puntaje < 1 || auxiliar.puntaje > 100 ) && flag < 2;flag++)
+    if(auxiliar.descripcion[0] == '\0')
     {
+        strcpy(auxiliar.descripcion,(movie+index)->descripcion);
+    }
+
+    auxiliar.puntaje = getInt("Ingrese puntaje: ");
+
+    while(auxiliar.puntaje < 1 || auxiliar.puntaje > 100)
+    {
+        if(auxiliar.puntaje == 0)
+        {
+            auxiliar.puntaje = (movie+index)->puntaje;
+            break;
+        }
         auxiliar.puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje del 1 al 100: ");
     }
-    if(flag > 2)
-    {
-        auxiliar.puntaje = 1;
-    }
-    getString("Ingrese link de imagen: ",auxiliar.linkImagen);
 
-    printf("\nTITULO: %s \nGENERO: %s \nDURACION: %d \nSINOPSIS: %s \nPUNTAJE: %d \nIMAGEN: %s \n",
+    getString("Ingrese link de imagen: ",auxiliar.linkImagen);
+    if(auxiliar.linkImagen[0] == '\0')
+    {
+        strcpy(auxiliar.linkImagen,(movie+index)->linkImagen);
+    }
+
+    printf("\nTITULO: %s \nGENERO: %s \nDURACION: %d minutos\nSINOPSIS: %s \nPUNTAJE: %d/100 \nIMAGEN: %s \n",
            auxiliar.titulo,auxiliar.genero,auxiliar.duracion,auxiliar.descripcion,auxiliar.puntaje,auxiliar.linkImagen);
     printf("\nSI ESTOS DATOS SON CORRECTOS PRESIONE 'S'...");
     fflush(stdin);
@@ -174,6 +229,11 @@ int modificar(eMovie *movie)
         return 0;
     }
 /// 3. SOBREESCRIBO EL ARCHIVO pelicula.dat CON EL ARRAY LOCAL MODIFICADO
+    fp = fopen("pelicula.dat","wb");
+    if(fp == NULL)
+    {
+        return 0;
+    }
     for(index=0;(movie+index)->duracion != 0;index++)
     {
         fwrite(&movie[index],sizeof(eMovie),1,fp);
@@ -182,6 +242,12 @@ int modificar(eMovie *movie)
     return 1;
 }
 
+/** \brief GENERA UN ARCHIVO HTML DONDE SE VUELCAN LOS DATOS DEL ARRAY ESTRUCTURA
+ *
+ * \param movie eMovie* ESTRUCTURA LOCAL
+ * \return int DEVUELVE 1 SI SE EJECUTO CORRECTAMENTE, 0 SI NO SE COMPLETO EL PROCESO
+ *
+ */
 int generarWeb(eMovie *movie)
 {
     FILE *html;
@@ -204,44 +270,94 @@ int generarWeb(eMovie *movie)
     return 1;
 }
 
-/**< FUNCIONES DE DESARROLLO UNICAMENTE */
-void mostrar(eMovie *movie)
+
+/** \brief MUESTRA LOS TITULOS DE LAS PELICULAS INGRESADAS, EN ORDEN DE INGRESO
+ *
+ * \param movie eMovie* ESTRUCTURA LOCAL
+ * \param length int LARGO DEL ARRAY ESTRUCTURA
+ * \return void
+ *
+ */
+void mostrar(eMovie *movie, int length)
 {
     int i;
-    for(i=0;(movie+i)->duracion != 0;i++)
+    for(i=0;(movie+i)->duracion != 0 && i < length;i++)
     {
         printf("%d--%s\n",i+1,(movie+i)->titulo);
     }
 }
 
-int mostrarUno(eMovie *movie)
+/** \brief PIDE EL # DE PELICULA INGRESADA Y LA MUESTRA POR CONSOLA
+ *
+ * \param movie eMovie* ESTRUCTURA LOCAL
+ * \param length int LARGO DEL ARRAY ESTRUCTURA
+ * \return int DEVUELVE EL INDICE DEL ARRAY ESTRUCTURA
+ *
+ */
+int mostrarUno(eMovie *movie, int length)
 {
     int i;
-    mostrar(movie);
-    i = getInt("Ingrese numero de pelicula: ") - 1;
-    /*while((movie+i)->duracion == 0)
+    mostrar(movie,length);
+    i = getInt("\nIngrese numero de pelicula: ") - 1;
+    while((movie+i)->duracion == 0 || i > length)
     {
         i = getInt("NUMERO INVALIDO:Ingrese numero de pelicula: ") - 1;
-    }*/
+    }
     printf("\nTITULO: %s \nGENERO: %s \nPUNTAJE: %d \nDURACION: %d \nSINOPSIS: %s \nIMAGEN: %s \n",
            movie[i].titulo,movie[i].genero,movie[i].puntaje,movie[i].duracion,movie[i].descripcion,movie[i].linkImagen);
 
     return i;
 }
 
-/**< END_FUNCIONES DE DESARROLLO */
 
+/** \brief PIDE, VERIFICA Y DEVUELVE DATOS ENTEROS
+ *
+ * \param mensaje char* INFORMACION PARA EL USUARIO
+ * \return int DEVUELVE UN VALOR NUMERICO ENTERO
+ *
+ */
 int getInt(char *mensaje)
 {
     int numero;
+    char auxiliar[10];
     printf(mensaje);
-    scanf("%d",&numero);
+    fflush(stdin);
+    gets(auxiliar);
+    numero = atoi(auxiliar);
     return numero;
 }
-char* getString(char *mensaje, char *retorno)
+/** \brief PERMITE INGRESAR UNA CADENA DE CARACTERES
+ *
+ * \param mensaje char* INFORMACION PARA EL USUARIO
+ * \param retorno[] char VARIABLE DONDE SE GUARDARA EL STRING
+ * \return char* DEVUELVE UN PUNTERO DE STRING
+ *
+ */
+char* getString(char *mensaje, char retorno[])
 {
     printf(mensaje);
     fflush(stdin);
     gets(retorno);
     return retorno;
+}
+
+/** \brief UBICA EL PRIMER INDICE LIBRE EN UN ARRAY
+ *
+ * \param movie eMovie* ESTRUCTURA LOCAL
+ * \param length int LARGO DEL ARRAY ESTRUCTURA
+ * \return int DEVUELVE EL INDICE, SI NO LOGRA UBICAR ALGUNO DEVUELVE UN NUMERO NEGATIVO
+ *
+ */
+int getIndex(eMovie *movie, int length)
+{
+    int index;
+
+    for(index=0;index < length && (movie+index)->duracion != 0;index++);
+
+    if(index >= length)
+    {
+        return -1;
+    }
+
+    return index;
 }

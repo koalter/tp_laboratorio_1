@@ -14,42 +14,23 @@ typedef struct
 
 #endif // LIB_H_INCLUDED
 
-/** \brief CARGA LOS DATOS DE pelicula.dat AL ARRAY LOCAL
- *
- * \param movie eMovie* ESTRUCTURA DE LAS PELICULAS
- * \return int DEVUELVE 1 SI CARGO TODOS LOS DATOS, 0 SI EL ARCHIVO NO EXISTE, -1 SI HUBO UN ERROR EN LA CARGA DEL ARRAY
- *
- */
+
 int init(eMovie *movie, int length);
 
-/** \brief AGREGA UNA PELICULA AL ARCHIVO pelicula.dat Y LO SINCRONIZA CON EL ARRAY LOCAL
- *
- * \param eMovie* ESTRUCTURA LOCAL
- * \return int NOS DEBE DEVOLVER LA CANTIDAD DE ESTRUCTURAS QUE SE COPIARON AL ARCHIVO
- *
- */
-int alta(eMovie*);
 
-/** \brief BORRA UNA PELICULA AL ARRAY LOCAL Y SE SINCRONIZA CON EL ARCHIVO pelicula.dat
- *
- * \param eMovie* ESTRUCTURA LOCAL
- * \return int DEVUELVE 1 SI LA FUNCION SE EJECUTA CON EXITO, CASO CONTRARIO DEVUELVE 0
- *
- */
-int baja(eMovie*);
+int alta(eMovie*, int length);
 
-/** \brief MODIFICA UNA PELICULA DEL ARRAY LOCAL Y LO SINCRONIZA AL ARCHIVO pelicula.dat
- *
- * \param eMovie* ESTRUCTURA LOCAL
- * \return int DEVUELVE 1 SI LA FUNCION SE EJECUTA CON EXITO, CASO CONTRARIO DEVUELVE 0
- *
- */
-int modificar(eMovie*);
+
+int baja(eMovie*, int length);
+
+int modificar(eMovie*, int length);
 
 int generarWeb(eMovie*);
 
-void mostrar(eMovie *movie);
-int mostrarUno(eMovie *movie);
+void mostrar(eMovie *movie, int length);
+int mostrarUno(eMovie *movie, int length);
 
 int getInt(char *mensaje);
-char* getString(char *mensaje, char *retorno);
+char* getString(char *mensaje, char retorno[]);
+
+int getIndex(eMovie *movie, int length);
