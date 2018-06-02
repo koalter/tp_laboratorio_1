@@ -32,3 +32,5 @@ int getInt(char *mensaje);
 char* getString(char *mensaje, char retorno[]);
 
 int getIndex(eMovie *movie, int length);
+
+int checkAlfanumerico(eMovie *movie);

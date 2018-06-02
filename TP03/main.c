@@ -23,8 +23,6 @@ int main()
         printf("4. Generar pagina web\n");
         printf("\n9. Salir\n");
 
-        //mostrar(movie,SIZE);
-
         opcion = getInt("\nIngrese una opcion: ");
 
         switch(opcion)
@@ -40,7 +38,6 @@ int main()
                 {
                     printf("EL PROCESO NO PUDO SER COMPLETADO!\n\n");
                 }
-                /** BORRAR ESTO *//*printf("\nel archivo pelicula.dat contiene %d entradas\n",operacionExitosa);*/
                 system("pause");
                 break;
             case 2:

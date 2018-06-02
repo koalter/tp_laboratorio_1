@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <ctype.h>
 #include "lib.h"
 
 /** \brief CARGA LOS DATOS DE pelicula.dat AL ARRAY LOCAL
@@ -45,53 +46,59 @@ int init(eMovie *movie, int length)
 int alta(eMovie *movie, int length)
 {
     FILE *fp;
-    int i;
+    int index;
     int retorno = 0;
     int flag = 0;
-/// PASO LOS DATOS A LA ESTRUCTURA LOCAL
-    i = getIndex(movie, length);
-    if(i < 0)
+
+    index = getIndex(movie, length);
+    if(index < 0)
     {
         return 0;
     }
 
-    getString("\nIngrese titulo: ",(movie+i)->titulo);
-    while((movie+i)->titulo[0] == '\0')
+    getString("\nIngrese titulo: ",(movie+index)->titulo);
+    while((movie+index)->titulo[0] == '\0')
     {
         if(flag == 1)
         {
             return 0;
         }
-        getString("\nDebe ingresar un titulo para continuar: ",(movie+i)->titulo);
+        getString("\nDebe ingresar un titulo para continuar: ",(movie+index)->titulo);
         flag++;
     }
 
-    getString("Ingrese genero: ",(movie+i)->genero);
-
-    (movie+i)->duracion = getInt("Ingrese duracion en minutos: ");
-    while((movie+i)->duracion < 1)
+    getString("Ingrese genero: ",(movie+index)->genero);
+    flag = checkAlfanumerico(movie+index);
+    while(flag == 1)
     {
-        (movie+i)->duracion = getInt("NUMERO INVALIDO: Ingrese duracion en minutos: ");
+        getString("ERROR:Ingrese genero: ",(movie+index)->genero);
+        flag = checkAlfanumerico(movie+index);
     }
 
-    getString("Ingrese sinopsis: ",(movie+i)->descripcion);
-
-    (movie+i)->puntaje = getInt("Ingrese puntaje (100 maximo): ");
-    while((movie+i)->puntaje > 100)
+    (movie+index)->duracion = getInt("Ingrese duracion en minutos: ");
+    while((movie+index)->duracion < 1)
     {
-        (movie+i)->puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje (100 maximo): ");
+        (movie+index)->duracion = getInt("NUMERO INVALIDO: Ingrese duracion en minutos: ");
     }
 
-    getString("Ingrese link de imagen: ",(movie+i)->linkImagen);
-/// COPIO LOS DATOS DEL ARRAY A UN ARCHIVO pelicula.dat
+    getString("Ingrese sinopsis: ",(movie+index)->descripcion);
+
+    (movie+index)->puntaje = getInt("Ingrese puntaje (100 maximo): ");
+    while((movie+index)->puntaje > 100)
+    {
+        (movie+index)->puntaje = getInt("NUMERO INVALIDO: Ingrese puntaje (100 maximo): ");
+    }
+
+    getString("Ingrese link de imagen: ",(movie+index)->linkImagen);
+
     fp = fopen("pelicula.dat","wb");
     if(fp == NULL)
     {
         printf("\nEl archivo no existe.\nGenerando 'pelicula.dat'...!\n");
     }
-    for(i=0;(movie+i)->duracion != 0;i++)
+    for(index=0;(movie+index)->duracion != 0;index++)
     {
-        fwrite((movie+i),sizeof(eMovie),1,fp);
+        fwrite((movie+index),sizeof(eMovie),1,fp);
         retorno++;
     }
     fclose(fp);
@@ -113,7 +120,6 @@ int baja(eMovie *movie, int length)
     int acumulador = 0;
     char respuesta;
 
-/// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO ELIMINAR (CONFIRMAMOS)
     i = mostrarUno(movie, length);
     if (i < 0)
     {
@@ -130,7 +136,7 @@ int baja(eMovie *movie, int length)
     {
         return 0;
     }
-/// 2. COPIO EL ARRAY LOCAL A UN ARRAY AUXILIAR OMITIENDO EL ELIMINADO
+
     for(i=0;(movie+i)->duracion != 0;i++)
     {
         for(j=i+acumulador;(movie+j)->duracion == -1;j++)
@@ -142,7 +148,7 @@ int baja(eMovie *movie, int length)
             movie[i] = movie[j];
         }
     }
-/// 3. SOBREESCRIBO EL ARCHIVO pelicula.dat CON EL ARRAY AUXILIAR
+
     fp = fopen("pelicula.dat","wb");
     if(fp == NULL)
     {
@@ -169,13 +175,12 @@ int modificar(eMovie *movie, int length)
     int index;
     char respuesta;
 
-/// 1. LEO EL ARRAY LOCAL Y BUSCO EL INDICE QUE QUIERO MODIFICAR
     index = mostrarUno(movie,length);
     if (index < 0)
     {
         return 0;
     }
-/// 2. LE PASO LOS DATOS A UN ARRAY AUXILIAR (VERIFICO) Y LOS COPIO AL LOCAL
+
     getString("\nIngrese titulo: ",auxiliar.titulo);
     if(auxiliar.titulo[0] == '\0')
     {
@@ -236,7 +241,7 @@ int modificar(eMovie *movie, int length)
     {
         return 0;
     }
-/// 3. SOBREESCRIBO EL ARCHIVO pelicula.dat CON EL ARRAY LOCAL MODIFICADO
+
     fp = fopen("pelicula.dat","wb");
     if(fp == NULL)
     {
@@ -374,4 +379,18 @@ int getIndex(eMovie *movie, int length)
     }
 
     return index;
+}
+
+int checkAlfanumerico(eMovie *movie)
+{
+    int i;
+
+    for(i=0;i < strlen(movie->genero);i++)
+    {
+        if(!isalpha(movie->genero[i]))
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
